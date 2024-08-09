@@ -19,10 +19,17 @@ def upload():
     form = UploadFileForm()
     if form.validate_on_submit():
         file = form.file.data #First grab the file
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
-        #then save the file
-        return "File has been uploaded"
+        if allowed_file(file.filename):
+            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
+            #then save the file
+            return "File has been uploaded"
+        else:
+            return "Sorry only Windows log files permitted"
     return render_template('index.html', form=form)
+
+def allowed_file(filename):
+    ALLOWED_EXT = ['evtx']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
 
 if __name__ == "__main__":
     app.run(debug=True)
