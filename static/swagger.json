@@ -1,0 +1,33 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "File Upload API",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/upload": {
+        "post": {
+          "summary": "Upload an EVTX file",
+          "consumes": ["multipart/form-data"],
+          "parameters": [
+            {
+              "name": "file",
+              "in": "formData",
+              "type": "file",
+              "required": true,
+              "description": "The EVTX file to upload"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File has been uploaded and processed"
+            },
+            "400": {
+              "description": "Bad Request, only EVTX files are allowed"
+            }
+          }
+        }
+      }
+    }
+  }
+  
