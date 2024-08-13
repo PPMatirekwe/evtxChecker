@@ -13,13 +13,19 @@ API_URL = '/static/swagger.json'
 swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={'app_name': "EVTX File Upload API"})
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
+#decorater for my endpoint 
 @app.route('/upload', methods=["POST"])
+
+#logic for this endpoint
 def upload():
     if 'file' not in request.files:
         return jsonify({"error": "No file part in the request"}), 400
 
     file = request.files['file']
+    
+    #if file in dictionary 
     if file and allowed_file(file.filename):
+        #included security cosniderations
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
         file.save(file_path)
 
@@ -32,6 +38,7 @@ def upload():
         return jsonify({"error": "Only .evtx files are allowed"}), 400
 
 def allowed_file(filename):
+    #check if Evtx type 
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'evtx'
 
 def process_evtx(file_path):
